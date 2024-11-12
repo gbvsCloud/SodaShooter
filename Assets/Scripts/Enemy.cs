@@ -10,6 +10,11 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private float velocity = 1.5f;
 
+    [SerializeField] private Material normalMaterial;
+    [SerializeField] private Material damageMaterial;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    private IEnumerator IDamageEffect;
+
 
     public void Start()
     {
@@ -19,9 +24,34 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+
+        if(IDamageEffect != null)
+        {
+            StopCoroutine(IDamageEffect);
+            IDamageEffect = null;
+        }
+        else
+        {
+            IDamageEffect = DamageEffect();
+            StartCoroutine(IDamageEffect);
+        }
+
+        
+        
+
         if(health <= 0)
         {
             Destroy(gameObject);
         }
     }
+
+
+
+    IEnumerator DamageEffect()
+    {
+        spriteRenderer.material = damageMaterial;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.material = normalMaterial;
+    }
+
 }
