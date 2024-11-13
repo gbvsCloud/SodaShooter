@@ -106,6 +106,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   damageMaterial: {fileID: 2100000, guid: 1c15fa0b0ba82ae4386a45125bcae25b, type: 2}
   spriteRenderer: {fileID: 8670733773400411924}
+  player: {fileID: 2296767694810950647, guid: f2b5dca1bab2fee41be6704adde8bb61, type: 3}
 --- !u!50 &7864952709226112334
 Rigidbody2D:
   serializedVersion: 4

@@ -9,6 +9,11 @@ public abstract class Shoot : MonoBehaviour
     [SerializeField] protected Rigidbody2D rigidBody;
 
 
+    protected virtual void Start()
+    {
+        Destroy(gameObject, 10);
+    }
+
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
         if(collider.CompareTag("Enemy"))

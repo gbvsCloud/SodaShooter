@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameObject joystick;
+    [SerializeField] GameObject gameplayUI;
+    [SerializeField] GameObject startUI;
     [SerializeField] GameObject enemySpawner;
     [SerializeField] Player player;
 
@@ -48,6 +49,10 @@ public class GameManager : MonoBehaviour
                     ChangeGameState(GameState.Run);
                 }
             }
+            else if(Input.GetButtonDown("Fire1"))
+            {
+                ChangeGameState(GameState.Run);  
+            }
         
 
         }
@@ -64,13 +69,13 @@ public class GameManager : MonoBehaviour
 
         if(state == GameState.Start)
         {
-            joystick.SetActive(false);
+            gameplayUI.SetActive(false);
             enemySpawner.SetActive(false);
         }
 
         if(state == GameState.Run)
         {
-            
+            startUI.SetActive(false);
             player.StartCoroutine(player.StartPlayer());
             StartCoroutine(StartDelay());
         }
@@ -81,8 +86,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator StartDelay()
     {
-        yield return new WaitForSeconds(1.9f);
-        joystick.SetActive(true);
+        yield return new WaitForSeconds(1.8f);
+        gameplayUI.SetActive(true);
         enemySpawner.SetActive(true);
     }
     
