@@ -14,10 +14,8 @@ public class ShootQueueDisplay : MonoBehaviour
 
     public void UpdateShootQueue(List<Shoot> shootList)
     {
-        // Limpar a lista antes de começar
         shootDisplayImage.Clear();
         
-        // Adicionar todas as imagens existentes no layout para shootDisplayImage
         foreach (Transform child in horizontalLayoutGroup.transform)
         {
             shootDisplayImage.Add(child.GetComponent<Image>());
@@ -25,7 +23,6 @@ public class ShootQueueDisplay : MonoBehaviour
 
         int amountToChange = shootList.Count - shootDisplayImage.Count;
 
-        // Remover elementos extras, se houver
         if (amountToChange < 0)
         {
             for (int i = 0; i < Math.Abs(amountToChange); i++)
@@ -34,7 +31,6 @@ public class ShootQueueDisplay : MonoBehaviour
             }
         }
 
-        // Adicionar novos elementos, se necessário
         if (amountToChange > 0)
         {
             for (int i = 0; i < amountToChange; i++)
@@ -43,14 +39,12 @@ public class ShootQueueDisplay : MonoBehaviour
             }
         }
 
-        // Atualizar a lista de imagens novamente após adicionar novos elementos
         shootDisplayImage.Clear();
         foreach (Transform child in horizontalLayoutGroup.transform)
         {
             shootDisplayImage.Add(child.GetComponent<Image>());
         }
 
-        // Atualizar os sprites
         for (int i = 0; i < shootDisplayImage.Count; i++)
         {
             shootDisplayImage[i].sprite = shootList[i].GetComponent<SpriteRenderer>().sprite;
@@ -60,7 +54,7 @@ public class ShootQueueDisplay : MonoBehaviour
 
     public void UpdateCurrentShoot(int currentIndex)
     {
-        for(int i = 0; i < shootDisplayImage.Count; i++)
+        for(int i = 0; i < shootDisplayImage?.Count; i++)
         {
             if(i < currentIndex)
                 shootDisplayImage[i].color = new Color(1, 1, 1, 0.1f);

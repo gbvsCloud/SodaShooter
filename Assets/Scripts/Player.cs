@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-
+using System;
 public class Player : MonoBehaviour
 {
     [SerializeField] private List<Shoot> shootQueue = new List<Shoot>();
@@ -14,44 +11,109 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject otta;
     [SerializeField] ShootQueueDisplay shootQueueDisplay;
 
-    public PlayerStats stats = new();
+    [NonSerialized] public PlayerStats stats = new();
+
+    public event EventHandler updateHudEvent;
+
+    [SerializeField] private List<Shoot> shootPool = new();
+
+    IEnumerator reload, spawnShoot;
+
+
+    [SerializeField] private bool canShoot = true;
+
 
     public void Start()
     {
+        GenerateShootQueue();
         
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         shootQueueDisplay.UpdateShootQueue(shootQueue);
         shootQueueDisplay.UpdateCurrentShoot(lastShootIndex);
     }
 
 
-    IEnumerator Shoot()
+    public void Shoot()
     {
-        while(true)
+
+        if(shootQueue.Count <= 0 || gameManager.gs == GameManager.GameState.Start || gameManager.gs == GameManager.GameState.Dead || !canShoot) return;
+
+        
+        SpawnShoot();
+            
+            
+        
+    }
+
+    public int GetScore() => stats.score;    
+
+
+    public void SpawnShoot()
+    {
+        if(spawnShoot == null && canShoot)
         {
-            if(shootQueue.Count <= 0 || gameManager.gs == GameManager.GameState.Start || gameManager.gs == GameManager.GameState.Dead) yield return null;
-
-            if(lastShootIndex >= shootQueue.Count)
-            {
-                Debug.Log("recarregando");         
-                yield return new WaitForSeconds(stats.GetRechargeDelay()); 
-                lastShootIndex = 0;
-            }
-            
-            yield return new WaitForSeconds(stats.GetShootDelay());
-
-            Shoot newShoot = Instantiate(shootQueue[lastShootIndex], transform.position, Quaternion.identity);
-
-            lastShootIndex++;
-            
-            
-            
+            spawnShoot = ISpawnShoot();
+            StartCoroutine(spawnShoot);
         }
     }
 
+   IEnumerator ISpawnShoot()
+    {
+        if (lastShootIndex < shootQueue.Count)
+        {
+            canShoot = false;
+            Shoot newShoot = Instantiate(shootQueue[lastShootIndex]);
+            newShoot.transform.position = transform.position;
+
+            lastShootIndex++;
+
+            if (lastShootIndex >= shootQueue.Count)
+            {
+                Reload();
+            }
+
+            yield return new WaitForSeconds(stats.GetShootDelay());
+
+            canShoot = true;
+        }
+
+
+        spawnShoot = null;
+    }
+
+
+    public void Reload()
+    {
+        if(reload == null)
+        {
+            reload = IReload();
+            StartCoroutine(reload);
+        }
+
+    }
+    
+
+    IEnumerator IReload()
+    {
+        canShoot = false;
+        yield return new WaitForSeconds(stats.GetRechargeDelay()); 
+        reload = null;
+        GenerateShootQueue();
+        lastShootIndex = 0;
+        canShoot = true;
+        
+    }
+
+    public void GenerateShootQueue()
+    {
+        for(int i = 0; i < shootQueue.Count; i++)
+        {
+            shootQueue[i] = shootPool[UnityEngine.Random.Range(0, shootPool.Count)];
+        }
+    }
 
 
     public IEnumerator StartPlayer()
@@ -60,27 +122,41 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.8f);
         otta.SetActive(false);
         animator.SetTrigger("Fly");
-        StartCoroutine(Shoot());
     }
+
 
 
     public void EnemyKilled()
     {
         stats.score += 100;
+        Debug.Log(stats.score);
     }
 
-    [System.Serializable]
+    public void ResetStats()
+    {
+        stats = new()
+        {
+            defaultRechargeDelay = 1f,
+            defaultShootDelay = 0.3f,
+            rechargeReductionStack = 0,
+            shootReductionStack = 0,
+            criticalChanceStack = 0,
+            specialChanceStack = 0,
+            score = 0
+        };
+    }
     public class PlayerStats
     {
 
-        public float defaultRechargeDelay = 2;
-        public float defaultShootDelay = 0.6f;
+        public float defaultRechargeDelay;
+        public float defaultShootDelay;
+        public int rechargeReductionStack;
+        public int shootReductionStack;
+        public int criticalChanceStack;
+        public int specialChanceStack;
+        public int score;
 
-        public int rechargeReductionStack = 0;
-        public int shootReductionStack = 0;
-        public int criticalChanceStack = 0;
-        public int score = 0;
-
+        public float GetSpecialChance() => 5  + (specialChanceStack * 10);
         public float GetRechargeDelay() => defaultRechargeDelay * (float)Math.Pow(0.9, Convert.ToDouble(rechargeReductionStack));
         public float GetShootDelay() => defaultShootDelay * (float)Math.Pow(0.9, Convert.ToDouble(shootReductionStack));
 

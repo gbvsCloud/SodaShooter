@@ -6,20 +6,39 @@ public abstract class Shoot : MonoBehaviour
 {
     protected float shootVelocity;
     protected float shootDamage;
+    protected float penetration;
     [SerializeField] protected Rigidbody2D rigidBody;
 
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         Destroy(gameObject, 10);
     }
+
+    protected virtual void Start()
+    {
+        rigidBody.velocity = new Vector2(shootVelocity, 0);
+    }
+
+    
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
         if(collider.CompareTag("Enemy"))
         {
-            collider.GetComponent<Enemy>()?.TakeDamage(shootDamage);
-            Destroy(gameObject);
+            OnEnemyHit(collider?.GetComponent<Enemy>());
+            
         }
+    }
+
+    protected virtual void OnEnemyHit(Enemy enemy)
+    {
+        enemy.TakeDamage(shootDamage);
+
+        penetration--;
+        shootVelocity = 2;
+            if(penetration <= 0)
+                Destroy(gameObject);
+        
     }
 }

@@ -44,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
 
             foreach(Vector2 enemyPos in randomWave.enemyPositions)
             {
-                Enemy newEnemy = Instantiate(enemy, new Vector2(enemyPos.x, enemyPos.y + cameraSize.y), Quaternion.identity);
+                Enemy newEnemy = Instantiate(enemy, new Vector2(cameraSize.x + enemyPos.x, enemyPos.y), enemy.transform.rotation);
             }
 
             

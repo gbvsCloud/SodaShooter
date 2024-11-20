@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Soda : Shoot
+public class OttaTaillor : Shoot
 {
     protected override void Awake()
     {
@@ -10,7 +8,9 @@ public class Soda : Shoot
         shootVelocity = 14;
         shootDamage = 1.5f;
         penetration = 2;
+        
     }
+
 }
 
 

@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float health = 3;
     [SerializeField] private Rigidbody2D rigidBody;
 
-    [SerializeField] private float velocity = 1f;
+    [SerializeField] private float velocity = 0.6f;
 
     [SerializeField] private Material normalMaterial;
     [SerializeField] private Material damageMaterial;
@@ -19,8 +19,8 @@ public class Enemy : MonoBehaviour
 
     public void Start()
     {
-        rigidBody.velocity = new Vector2(0, -velocity);
-        Destroy(gameObject, 10);
+        rigidBody.velocity = new Vector2(-velocity, 0);
+        Destroy(gameObject, 30);
     }
 
     public void TakeDamage(float damage)
@@ -32,11 +32,9 @@ public class Enemy : MonoBehaviour
             StopCoroutine(IDamageEffect);
             IDamageEffect = null;
         }
-        else
-        {
-            IDamageEffect = DamageEffect();
-            StartCoroutine(IDamageEffect);
-        }
+        
+        IDamageEffect = DamageEffect();
+        StartCoroutine(IDamageEffect);
 
         
         
@@ -55,6 +53,7 @@ public class Enemy : MonoBehaviour
         spriteRenderer.material = damageMaterial;
         yield return new WaitForSeconds(0.1f);
         spriteRenderer.material = normalMaterial;
+        IDamageEffect = null;
     }
 
 }

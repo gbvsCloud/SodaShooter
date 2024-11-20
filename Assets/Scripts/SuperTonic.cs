@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Soda : Shoot
+public class SuperTonic : Shoot
 {
     protected override void Awake()
     {
