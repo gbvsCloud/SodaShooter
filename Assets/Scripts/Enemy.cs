@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Material normalMaterial;
     [SerializeField] private Material damageMaterial;
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Player player;
     private IEnumerator IDamageEffect;
 
 
@@ -23,7 +22,7 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject, 30);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Player player = null)
     {
         health -= damage;
 
@@ -34,14 +33,11 @@ public class Enemy : MonoBehaviour
         }
         
         IDamageEffect = DamageEffect();
-        StartCoroutine(IDamageEffect);
-
-        
-        
+        StartCoroutine(IDamageEffect);   
 
         if(health <= 0)
         {
-            player.EnemyKilled();
+            player?.EnemyKilled();
             Destroy(gameObject);
         }
     }

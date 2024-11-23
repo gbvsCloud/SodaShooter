@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject otta;
     [SerializeField] ShootQueueDisplay shootQueueDisplay;
 
-    [NonSerialized] public PlayerStats stats = new();
+    public PlayerStats stats = new();
 
     public event EventHandler updateHudEvent;
 
@@ -25,8 +25,9 @@ public class Player : MonoBehaviour
 
     public void Start()
     {
+        ResetStats();
         GenerateShootQueue();
-        
+          
     }
 
     public void FixedUpdate()
@@ -48,7 +49,6 @@ public class Player : MonoBehaviour
         
     }
 
-    public int GetScore() => stats.score;    
 
 
     public void SpawnShoot()
@@ -65,8 +65,9 @@ public class Player : MonoBehaviour
         if (lastShootIndex < shootQueue.Count)
         {
             canShoot = false;
-            Shoot newShoot = Instantiate(shootQueue[lastShootIndex]);
-            newShoot.transform.position = transform.position;
+            Shoot newShoot = Instantiate(shootQueue[lastShootIndex], transform.position, shootQueue[lastShootIndex].transform.rotation);
+
+            newShoot.player = this;
 
             lastShootIndex++;
 
@@ -145,6 +146,7 @@ public class Player : MonoBehaviour
             score = 0
         };
     }
+    [Serializable]
     public class PlayerStats
     {
 

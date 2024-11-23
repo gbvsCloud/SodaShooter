@@ -7,6 +7,7 @@ public abstract class Shoot : MonoBehaviour
     protected float shootVelocity;
     protected float shootDamage;
     protected float penetration;
+    public Player player;
     [SerializeField] protected Rigidbody2D rigidBody;
 
 
@@ -33,7 +34,7 @@ public abstract class Shoot : MonoBehaviour
 
     protected virtual void OnEnemyHit(Enemy enemy)
     {
-        enemy.TakeDamage(shootDamage);
+        enemy.TakeDamage(shootDamage, player);
 
         penetration--;
         shootVelocity = 2;
