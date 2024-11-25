@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private bool canShoot = true;
 
+    [SerializeField] private AudioClip playerDeath, fire;
+
+
 
     public void Start()
     {
@@ -70,6 +73,8 @@ public class Player : MonoBehaviour
             newShoot.player = this;
 
             lastShootIndex++;
+
+            AudioManager.PlaySound(fire);
 
             if (lastShootIndex >= shootQueue.Count)
             {
@@ -125,11 +130,16 @@ public class Player : MonoBehaviour
         animator.SetTrigger("Fly");
     }
 
+    public void AddSoda()
+    {
+        shootQueue.Add(shootPool[UnityEngine.Random.Range(0, shootPool.Count)]);
+    }
 
 
     public void EnemyKilled()
     {
-        stats.score += 100;
+        stats.score += UnityEngine.Random.Range(60, 101);
+        stats.gold += UnityEngine.Random.Range(30, 61);
         Debug.Log(stats.score);
     }
 
@@ -137,15 +147,29 @@ public class Player : MonoBehaviour
     {
         stats = new()
         {
-            defaultRechargeDelay = 1f,
-            defaultShootDelay = 0.3f,
+            defaultRechargeDelay = 1.75f,
+            defaultShootDelay = 0.5f,
             rechargeReductionStack = 0,
             shootReductionStack = 0,
             criticalChanceStack = 0,
             specialChanceStack = 0,
-            score = 0
+            score = 0,
+            life = 3,
+            gold = 0,
         };
     }
+
+    public void TakeDamage()
+    {
+        stats.life--;
+        if(stats.life <= 0)
+        {
+            AudioManager.PlaySound(playerDeath);
+            gameManager.ChangeGameState(GameManager.GameState.Dead);
+        }
+    }
+
+
     [Serializable]
     public class PlayerStats
     {
@@ -157,6 +181,9 @@ public class Player : MonoBehaviour
         public int criticalChanceStack;
         public int specialChanceStack;
         public int score;
+        public int gold;
+        public int life = 3;
+        public string name;
 
         public float GetSpecialChance() => 5  + (specialChanceStack * 10);
         public float GetRechargeDelay() => defaultRechargeDelay * (float)Math.Pow(0.9, Convert.ToDouble(rechargeReductionStack));

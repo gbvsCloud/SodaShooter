@@ -5,9 +5,9 @@ public class SuperTonic : Shoot
     protected override void Awake()
     {
         base.Awake();
-        shootVelocity = 14;
+        shootVelocity = 8;
         shootDamage = 1.5f;
-        penetration = 2;
+        penetration = 6;
     }
 }
 

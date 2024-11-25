@@ -7,10 +7,12 @@ public class Soda : Shoot
     protected override void Awake()
     {
         base.Awake();
-        shootVelocity = 14;
-        shootDamage = 1.5f;
+        shootVelocity = 20;
+        shootDamage = 3f;
         penetration = 2;
     }
+
+    
 }
 
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -12,7 +13,12 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Enemy enemy;
 
     [SerializeField] List<Wave> waves = new();
+
     Vector2 cameraSize;
+
+    Wave lastWaveChoosed;
+
+    private float timeToSpawn = 5f;
     public void Start()
     {
 
@@ -29,18 +35,41 @@ public class EnemySpawner : MonoBehaviour
 
 
 
-
+        
 
         StartCoroutine(SpawnEnemy());
         
         
     }
 
+    public void FixedUpdate()   
+    {
+        if(timeToSpawn > 0.5f)
+        {
+            timeToSpawn -= Time.deltaTime / 15;
+        }
+
+        Debug.ClearDeveloperConsole();
+        Debug.Log(timeToSpawn);
+    }
+
     IEnumerator SpawnEnemy()
     {
         while(true)
         {
-            Wave randomWave = waves[Random.Range(0, waves.Count)];
+            Wave randomWave;
+            if(lastWaveChoosed == null)
+                randomWave = waves[Random.Range(0, waves.Count)];
+                
+            else
+            {
+                randomWave = waves[Random.Range(0, waves.Count)];
+                while(lastWaveChoosed == randomWave)
+                {
+                    randomWave = waves[Random.Range(0, waves.Count)];
+                }
+            }
+            lastWaveChoosed = randomWave;
 
             foreach(Vector2 enemyPos in randomWave.enemyPositions)
             {
@@ -48,10 +77,10 @@ public class EnemySpawner : MonoBehaviour
             }
 
             
-            yield return new WaitForSeconds(randomWave.enemyPositions.Count * 2.5f);
+            yield return new WaitForSeconds(timeToSpawn + randomWave.enemyPositions.Count * 0.25f);
         }
     }
-
+    
     [System.Serializable]
     class Wave
     {

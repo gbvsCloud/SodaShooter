@@ -102,11 +102,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 3
   rigidBody: {fileID: 7864952709226112334}
-  velocity: 1.5
+  velocity: 2
   normalMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   damageMaterial: {fileID: 2100000, guid: 1c15fa0b0ba82ae4386a45125bcae25b, type: 2}
   spriteRenderer: {fileID: 8670733773400411924}
-  player: {fileID: 0}
+  enemyDeath: {fileID: 8300000, guid: 7da9d98699e6efa4a89296c0283ba6e1, type: 3}
 --- !u!50 &7864952709226112334
 Rigidbody2D:
   serializedVersion: 4

@@ -17,6 +17,5 @@ public class AttackSpeedUpgrade : Upgrade
         upgradeCost += upgradeLevel * 50;
     }
 
-    public override bool CanAffordUpgrade() => upgradeLevel < upgradeMaxLevel;
 
 }

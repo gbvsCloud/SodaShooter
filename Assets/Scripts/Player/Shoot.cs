@@ -13,7 +13,7 @@ public abstract class Shoot : MonoBehaviour
 
     protected virtual void Awake()
     {
-        Destroy(gameObject, 10);
+        Destroy(gameObject, 15);
     }
 
     protected virtual void Start()
@@ -29,6 +29,10 @@ public abstract class Shoot : MonoBehaviour
         {
             OnEnemyHit(collider?.GetComponent<Enemy>());
             
+        }   
+        else if(collider.CompareTag("BulletBarrier"))
+        {
+            Destroy(gameObject);
         }
     }
 
