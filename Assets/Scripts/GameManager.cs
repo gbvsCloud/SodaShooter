@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject startUI;
     [SerializeField] GameObject enemySpawner;
     [SerializeField] Player player;
+    [SerializeField] PlayerMovement playerMovement;
 
     AttackSpeedUpgrade attackSpeedUpgrade = new();
     ReloadSpeedUpgrade reloadSpeedUpgrade = new();
@@ -173,6 +174,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.8f);
         gameplayUI.SetActive(true);
         enemySpawner.SetActive(true);
+        player.enabled = true;
+        playerMovement.enabled = true;
     }
 
     public void BuyAttackSpeedUpgrade()

@@ -33,6 +33,11 @@ public class Player : MonoBehaviour
           
     }
 
+    public void Update()
+    {
+        if(Input.GetButton("Fire1") && gameManager.gs == GameManager.GameState.Run) Shoot();
+    }
+
     public void FixedUpdate()
     {
         shootQueueDisplay.UpdateShootQueue(shootQueue);

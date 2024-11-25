@@ -8,12 +8,20 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidBody;
-    [SerializeField] private FixedJoystick _fixedJoystick;
 
     [SerializeField] private float _moveSpeed;
 
+    [SerializeField] private float xDir;
+    [SerializeField] private float yDir;
+
+    public void Update()
+    {
+        xDir = Input.GetAxisRaw("Horizontal");
+        yDir = Input.GetAxisRaw("Vertical");
+    }
+
     public void FixedUpdate()
     {
-        _rigidBody.velocity = new Vector3(_fixedJoystick.Horizontal * _moveSpeed, _fixedJoystick.Vertical * _moveSpeed, 0);
+        _rigidBody.velocity = new Vector3(xDir * _moveSpeed, yDir * _moveSpeed, 0);
     }
 }
